@@ -1,4 +1,12 @@
 import React, { Component } from 'react';
+import { FcSearch } from 'react-icons/fc';
+import {
+  Searchbar,
+  SearchForm,
+  SearchInput,
+  SearchButton,
+  SearchSpan,
+} from './SearchBar.styled';
 import toast from 'react-hot-toast';
 
 export class SearchBar extends Component {
@@ -14,7 +22,9 @@ export class SearchBar extends Component {
     evt.preventDefault();
     const { value } = this.state;
     if (value.trim() === '') {
-      return toast.error('Please wright your request');
+      return toast.error('Please wright your request', {
+        icon: '👈',
+      });
     }
     this.props.onSubmit(value);
     this.setState({ value: '' });
@@ -23,13 +33,17 @@ export class SearchBar extends Component {
   render() {
     const { value } = this.state;
     const onChange = this.handleValueChange;
+    const onSubmit = this.handleSubmit;
+
     return (
-      <header className="searchbar">
-        <form className="form" onSubmit={this.handleSubmit}>
-          <button type="submit" className="button">
-            <span className="button-label">Search</span>
-          </button>
-          <input
+      <Searchbar className="searchbar">
+        <SearchForm className="form" onSubmit={onSubmit}>
+          <SearchButton type="submit" className="button">
+            <SearchSpan className="button-label">
+              <FcSearch size="30" />
+            </SearchSpan>
+          </SearchButton>
+          <SearchInput
             className="input"
             type="text"
             name="query"
@@ -39,8 +53,8 @@ export class SearchBar extends Component {
             placeholder="Search images and photos"
             onChange={onChange}
           />
-        </form>
-      </header>
+        </SearchForm>
+      </Searchbar>
     );
   }
 }

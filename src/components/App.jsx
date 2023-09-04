@@ -4,6 +4,9 @@ import { SearchBar } from './SearchBar/SearchBar';
 import { GlobalStyle } from './GlobalStyle';
 import toast, { Toaster } from 'react-hot-toast';
 import { ImageGallery } from './ImageGallery/ImageGallery';
+import { Loader } from './Loader/Loader';
+import { Button } from './Button/Button';
+import { Layout } from './Layout';
 
 export class App extends Component {
   state = {
@@ -26,23 +29,36 @@ export class App extends Component {
 
   upLoadImages = async () => {
     try {
-      this.setState({ loading: true, images: [] });
+      this.setState({ loading: true });
       const { hits, totalHits } = await fetchImages(
         this.state.query,
         this.state.page
       );
       if (!totalHits) {
         toast.error(
-          '"Sorry, nothing was found for your request, please try something else."'
+          'Sorry, nothing was found for your request, please try something else.',
+          {
+            icon: '🫣',
+          }
         );
+        return;
       }
 
       this.setState(prevState => ({
         images: [...prevState.images, ...hits],
-        totalHits: totalHits,
+        totalHits,
       }));
+
+      if (this.state.images.length < 12) {
+        return toast.success(`Hooray! We found ${totalHits} images.`, {
+          icon: '👏',
+        });
+      }
     } catch (error) {
       this.setState({ error: true });
+      toast.error('Oops, something went wrong.Please try again later.', {
+        icon: '🆘',
+      });
     } finally {
       this.setState({ loading: false, error: false });
     }
@@ -63,15 +79,20 @@ export class App extends Component {
   };
 
   render() {
+    const { loading, totalHits, images } = this.state;
+    const pages = totalHits / 12;
+    const loadMore = this.handleLoadMore;
     return (
-      <>
+      <Layout>
         <SearchBar onSubmit={this.handleSubmit} />
-        {this.state.totalHits > 0 && (
-          <ImageGallery images={this.state.images} />
+        {loading && <Loader />}
+        {totalHits > 0 && <ImageGallery images={images} />}
+        {totalHits > 0 && pages > 1 && !loading && (
+          <Button onLoadMore={loadMore} />
         )}
         <GlobalStyle />
         <Toaster position="top-right" reverseOrder={true} />
-      </>
+      </Layout>
     );
   }
 }
