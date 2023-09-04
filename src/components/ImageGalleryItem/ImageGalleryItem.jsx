@@ -30,7 +30,7 @@ export class ImageGalleryItem extends Component {
           <ImageGalleryImage src={webformatURL} alt={tags} />
         </ImageGalleryPart>
         {showModal && (
-          <Modal onClose={this.toggleModal}>
+          <Modal onClose={openModal}>
             <img src={largeImageURL} alt={tags} />
           </Modal>
         )}

@@ -82,9 +82,11 @@ export class App extends Component {
     const { loading, totalHits, images } = this.state;
     const pages = totalHits / 12;
     const loadMore = this.handleLoadMore;
+    const onSubmit = this.handleSubmit;
+
     return (
       <Layout>
-        <SearchBar onSubmit={this.handleSubmit} />
+        <SearchBar onSubmit={onSubmit} />
         {loading && <Loader />}
         {totalHits > 0 && <ImageGallery images={images} />}
         {totalHits > 0 && pages > 1 && !loading && (
