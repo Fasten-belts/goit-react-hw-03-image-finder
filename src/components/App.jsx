@@ -66,7 +66,9 @@ export class App extends Component {
     return (
       <>
         <SearchBar onSubmit={this.handleSubmit} />
-        {this.state.images && <ImageGallery images={this.state.images} />}
+        {this.state.totalHits > 0 && (
+          <ImageGallery images={this.state.images} />
+        )}
         <GlobalStyle />
         <Toaster position="top-right" reverseOrder={true} />
       </>
